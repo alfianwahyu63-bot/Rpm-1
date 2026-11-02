@@ -1,0 +1,22 @@
+SALESPULSE RPM2 - PAKET PWA PERBAIKAN INSTALASI
+
+Mengapa paket ini lebih mudah di-upload?
+Semua file penting berada dalam SATU folder tanpa subfolder icons.
+Ini mengurangi kesalahan saat upload memakai HP.
+
+1. Backup JSON dari dashboard lama sebelum mengubah website.
+2. Ekstrak ZIP di HP / komputer. Jangan mencoba instal ZIP atau HTML sebagai APK.
+3. Buka github.com/alfianwahyu63-bot/Rpm2 lalu pilih Add file > Upload files.
+4. Upload file-file hasil ekstraksi: index.html, sw.js, manifest.webmanifest,
+   icon-192.png, icon-512.png, CEK_PWA.html, .nojekyll, PETUNJUK_INSTALASI.txt.
+   Pastikan semua berada pada bagian PALING LUAR / root repository, bukan di folder.
+5. Commit changes. Di Settings > Pages gunakan Deploy from a branch > main > /(root).
+6. Cek dahulu alamat https://alfianwahyu63-bot.github.io/Rpm2/CEK_PWA.html
+   Hasil pemeriksaan ideal semuanya hijau, terutama manifest, icon, SW.
+7. Buka https://alfianwahyu63-bot.github.io/Rpm2/ dengan GOOGLE CHROME,
+   ketuk ⋮ > Install app / Tambahkan ke layar utama.
+8. Jika situs lama masih muncul, refresh, hapus shortcut PWA lama bila ada,
+   dan coba lagi tanpa menghapus data situs sebelum melakukan Backup JSON.
+
+Catatan: alamat GitHub Pages akan aktif hanya jika repo telah dipublikasikan.
+Penyimpanan tetap berada di perangkat/browser pengguna; situs GitHub Pages bukan database online.
