@@ -1,0 +1,27 @@
+<!doctype html><html lang="id"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnostik Instalasi RPM</title>
+<style>:root{font:15px/1.5 system-ui,-apple-system,sans-serif;background:#0d1428;color:#edf3ff}*{box-sizing:border-box}body{max-width:760px;margin:auto;padding:18px 14px 50px}h1{font-size:26px}p{color:#aab9d3}.card{padding:13px 16px;background:#192743;border-radius:13px;margin:10px 0;border:1px solid #2a3d5c}.card b{display:block}.card small{white-space:pre-wrap;overflow-wrap:anywhere;color:#bacde5}.ok{border-left:5px solid #39c994}.bad{border-left:5px solid #e35469}.warn{border-left:5px solid #ffbf52}.btn{color:white;background:#6453e2;border:0;border-radius:12px;padding:11px 14px;margin:6px 6px 4px 0;display:inline-block;text-decoration:none;font:inherit}code{overflow-wrap:anywhere}</style>
+</head><body><h1>🔧 Cek Instalasi RPM-1</h1>
+<p>Pemeriksaan langsung file PWA yang sudah di-upload ke GitHub Pages. Ikon harus mendapat status HTTP 200 (bukan 404).</p>
+<div id="out"><div class="card warn">Memeriksa…</div></div>
+<button class="btn" onclick="location.reload()">↻ Periksa ulang</button><a class="btn" href="./">Buka Dashboard</a>
+<p>Jika indikator masih merah, pastikan file di-upload ke <strong>folder utama repository</strong> (sejajar dengan index.html), bukan dalam folder ZIP.</p>
+<script>
+const out=document.getElementById('out');out.innerHTML='';
+function report(title,status,msg){const e=document.createElement('div');e.className='card '+status;e.innerHTML='<b></b><small></small>';e.querySelector('b').textContent=(status==='ok'?'✅ ':status==='bad'?'❌ ':'⚠️ ')+title;e.querySelector('small').textContent=msg;out.append(e)}
+const path='/Rpm-1/';
+const url=f=>new URL(f,location.origin+path);
+async function fetchFile(f){const res=await fetch(url(f).href+'?v='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);return res}
+async function main(){
+ report('HTTPS dan lokasi',location.protocol==='https:'&&location.pathname.startsWith(path)?'ok':'bad',location.href);
+ let m=null;
+ try{let r=await fetchFile('manifest.webmanifest');m=await r.json();const valid=['id','scope','start_url'].every(k=>m[k]===path)&&m.display==='standalone';report('Manifest, scope dan start_url',valid?'ok':'bad',`HTTP ${r.status}\nid: ${m.id}\nstart_url: ${m.start_url}\nscope: ${m.scope}\ndisplay: ${m.display}`)}catch(e){report('Manifest','bad',String(e))}
+ for(const [f,type] of [['index.html','text/html'],['sw.js','javascript']]){try{const r=await fetchFile(f);let ct=r.headers.get('content-type')||'';report(f,ct.includes(type)?'ok':'bad','HTTP '+r.status+' | '+ct)}catch(e){report(f,'bad',String(e))}}
+ if(m){for(const ico of (m.icons||[])){const f=ico.src.replace(/^\.\//,'');try{const r=await fetchFile(f);const blob=await r.blob();let bmp=await createImageBitmap(blob);const expect=Number((ico.sizes||'0x').split('x')[0]);let ok=bmp.width===expect&&bmp.height===expect&&blob.type.startsWith('image/');report('Ikon manifest: '+f,ok?'ok':'bad',`HTTP ${r.status} | ${bmp.width}×${bmp.height} | ${blob.type} | purpose: ${ico.purpose}`);bmp.close()}catch(e){report('Ikon manifest: '+f,'bad',String(e)+' (pastikan sudah ada di root GitHub)')}}}
+ try{const r=await fetchFile('sw.js');const reg=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});await reg.update();report('Service worker','ok','Terdaftar: '+reg.scope+' | status: '+(reg.active?.state||reg.installing?.state||'memproses'))}catch(e){report('Service worker','bad',String(e))}
+ const standalone=matchMedia('(display-mode:standalone)').matches || navigator.standalone===true;
+ report('Mode instalasi',standalone?'ok':'warn',standalone?'Sudah berjalan sebagai aplikasi.':'Belum terpasang — normal sebelum menekan Instal dari Chrome.');
+}
+main().catch(e=>report('Kesalahan pemeriksaan','bad',String(e)));
+</script></body></html>

@@ -1,0 +1,20 @@
+SALES PULSE RPM-1 — PAKET PERBAIKAN PWA + IKON RPM ASLI
+
+Repository: https://github.com/alfianwahyu63-bot/Rpm-1
+Situs: https://alfianwahyu63-bot.github.io/Rpm-1/
+Pemeriksaan: https://alfianwahyu63-bot.github.io/Rpm-1/CEK_PWA.html
+
+CARA UPLOAD
+1. Download ZIP dan EKSTRAK dahulu. Jangan upload ZIP sebagai satu file.
+2. Buka repository Rpm-1 di GitHub.
+3. Upload SEMUA file di folder paket ini ke AKAR repository (root), sejajar index.html.
+4. Kalau GitHub meminta, pilih Replace/Overwrite file lama (index.html, sw.js, manifest.webmanifest, CEK_PWA.html).
+5. Pastikan di daftar file GitHub terlihat icon-192.png dan icon-512.png, bukan hanya ZIP.
+6. Commit changes dan buka halaman CEK_PWA.html di Chrome.
+7. Semua pemeriksaan ikon harus HTTP 200 dan hijau. Jika masih merah, jangan coba instal dulu.
+8. Refresh dashboard; Chrome ⋮ → Instal aplikasi.
+
+Struktur root: index.html, manifest.webmanifest, sw.js, CEK_PWA.html, icon-192.png, icon-512.png, icon-maskable-512.png, apple-touch-icon.png, .nojekyll.
+
+CATATAN: Data penjualan disimpan lokal di perangkat/browser. Lakukan Backup JSON terlebih dulu sebelum membersihkan data situs, Chrome, atau menghapus aplikasi.
+ZIP ini belum diunggah ke GitHub; instalasi Android belum dapat dijamin sebelum deploy.
