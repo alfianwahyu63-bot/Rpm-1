@@ -1,33 +1,54 @@
-/* SalesPulse RPM week isolation 3.0 - network-first with offline cache fallback. */
+/* SalesPulse RPM — PWA Cloudflare/GitHub compatible. Does not touch Firestore or local sales data. */
 'use strict';
-const CACHE = 'salespulse-rpm-standalone-fix4-20261103';
-const SHELL = [
-  './', './index.html', './style.css', './cloud-sync.css', './app.js',
-  './cloud-sync.js', './firebase-config.js', './manifest.webmanifest',
-  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png'
+const APP_CACHE = 'salespulse-rpm-pwa-v6-20261103';
+const APP_FILES = [
+  './index.html', './manifest.webmanifest',
+  './icon-192.png','./icon-512.png','./icon-maskable-512.png',
+  './apple-touch-icon.png'
 ];
 self.addEventListener('install', event => {
-  // Do not block installation if an optional image is temporarily unavailable.
-  event.waitUntil(caches.open(CACHE).then(c => Promise.allSettled(SHELL.map(u => c.add(u)))).then(() => self.skipWaiting()));
+  event.waitUntil((async () => {
+    const c = await caches.open(APP_CACHE);
+    // Cache each file independently, so one optional file can't block SW installation.
+    await Promise.allSettled(APP_FILES.map(async path => {
+      const url = new URL(path, self.registration.scope);
+      const response = await fetch(url, {cache:'reload'});
+      if (response.ok) await c.put(url, response);
+    }));
+    await self.skipWaiting();
+  })());
 });
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k =>
-    (k.startsWith('salespulse-') || k.startsWith('rpm-sales-')) && k !== CACHE
-  ).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(name =>
+      (name.startsWith('salespulse-rpm-') || name.startsWith('rpm-sales-')) && name !== APP_CACHE
+    ).map(name => caches.delete(name)));
+    await self.clients.claim();
+  })());
 });
 self.addEventListener('fetch', event => {
-  const req=event.request;
-  if(req.method!=='GET')return;
-  const url=new URL(req.url),scope=new URL(self.registration.scope);
-  if(url.origin!==scope.origin || !url.pathname.startsWith(scope.pathname))return;
-  event.respondWith(fetch(req).then(res => {
-    if(res.ok){const clone=res.clone();event.waitUntil(caches.open(CACHE).then(c => c.put(req,clone)).catch(()=>{}));}
-    return res;
-  }).catch(async()=>{
-    const cached=await caches.match(req,{ignoreSearch:true});
-    if(cached)return cached;
-    if(req.mode==='navigate')return await caches.match('./index.html') || new Response('Offline, halaman belum tersimpan.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}});
-    return Response.error();
-  }));
+  const request = event.request;
+  if(request.method !== 'GET') return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname)) return;
+  event.respondWith((async () => {
+    try {
+      const fresh = await fetch(request);
+      if (fresh.ok && (request.mode === 'navigate' || /\.(html|css|js|webmanifest|png)$/i.test(url.pathname))) {
+        const cache = await caches.open(APP_CACHE);
+        await cache.put(request, fresh.clone());
+      }
+      return fresh;
+    } catch (err) {
+      const hit = await caches.match(request,{ignoreSearch:true});
+      if(hit) return hit;
+      if(request.mode === 'navigate') {
+        const root = new URL('./index.html',self.registration.scope);
+        const fallback = await caches.match(root);
+        if(fallback) return fallback;
+      }
+      return new Response('Koneksi sedang tidak tersedia.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}});
+    }
+  })());
 });

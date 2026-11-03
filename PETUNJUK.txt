@@ -1,0 +1,30 @@
+PERBAIKAN PWA RPM CLOUDFLARE — 03 NOV 2026
+
+Gejala: Di rpm-1.pages.dev > Chrome > Instal dan buat pintasan,
+opsi Instal abu-abu: "Aplikasi ini tidak dapat diinstal".
+
+Penyebab yang paling masuk akal adalah konfigurasi PWA yang belum sesuai
+dengan domain Cloudflare; sebelumnya manifest untuk GitHub memakai /Rpm-1/.
+Ini belum dapat dipastikan sebelum memeriksa file aktif di Cloudflare.
+
+Langkah aman:
+1) BACKUP JSON dari dashboard Cloudflare terlebih dahulu.
+2) Ekstrak file ZIP ini.
+3) Buka GitHub Rpm-1, unggah file hasil ekstraksi KE FOLDER ROOT,
+   dengan ikon root (icon-192.png dan icon-512.png).
+   Semua file paket ada di root; tidak ada folder yang wajib diunggah.
+4) Jangan hapus atau mengganti firebase-config.js dan firestore.rules.
+5) Commit, lalu pastikan deploy Cloudflare berhasil.
+6) Di Chrome langsung buka https://rpm-1.pages.dev/CEK_INSTALL.html
+   dan klik Periksa ulang.
+7) Jika semua berkas hijau, buka https://rpm-1.pages.dev/index.html
+   melalui Chrome langsung lalu pilih Instal aplikasi.
+
+Isi paket ini tetap memakai HTML terakhir (header V5) dengan hanya
+perubahan tiga link ikon/manifest di bagian <head>. Logika aplikasi,
+Firebase Cloud Sync, POINT 50/50 dan pemisahan minggu tidak diubah.
+
+JANGAN hapus penyimpanan browser: data lokal berbeda tiap domain.
+Jika sudah terpasang aplikasi lama, backup sebelum uninstall.
+Jika Chrome masih menonaktifkan Instal walau cek hijau,
+cek nama manifest terdeteksi dari DevTools atau kirim hasil CEK_INSTALL.
