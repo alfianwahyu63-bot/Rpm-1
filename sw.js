@@ -1,6 +1,6 @@
 /* SalesPulse RPM week isolation 3.0 - network-first with offline cache fallback. */
 'use strict';
-const CACHE = 'salespulse-rpm-week-isolation-v3-20261103';
+const CACHE = 'salespulse-rpm-standalone-fix4-20261103';
 const SHELL = [
   './', './index.html', './style.css', './cloud-sync.css', './app.js',
   './cloud-sync.js', './firebase-config.js', './manifest.webmanifest',

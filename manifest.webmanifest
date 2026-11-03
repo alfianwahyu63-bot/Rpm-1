@@ -1,10 +1,10 @@
 {
-  "id": "/Rpm-1/",
   "name": "RPM • Rekomendasi Produk Mingguan",
   "short_name": "RPM Sales",
-  "description": "Dashboard rekomendasi produk mingguan dengan target dan pencapaian per merek.",
-  "start_url": "/Rpm-1/",
-  "scope": "/Rpm-1/",
+  "description": "Dashboard target, achievement QTY dan NS, point 50/50, time factor, dan laporan mingguan.",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#f3f6fb",
@@ -12,23 +12,22 @@
   "lang": "id",
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "./icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-maskable-512.png",
+      "src": "./icons/icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-  "prefer_related_applications": false
+  ]
 }
