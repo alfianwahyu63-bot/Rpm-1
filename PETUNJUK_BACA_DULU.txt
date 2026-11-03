@@ -1,0 +1,37 @@
+PERBAIKAN SALESPULSE RPM: WEEK 2 DAN WEEK 3 TERPISAH (FIX WEEK 3.0)
+================================================================
+INI PATCH 3 FILE, BUKAN PROYEK BARU:
+  index.html
+  app.js
+  sw.js
+
+KENAPA SEBELUMNYA TETAP CAMPUR?
+Versi master lama menampilkan semua brand GLOBAL. Selain itu Service Worker lama
+menyajikan app.js dari cache walaupun Anda sudah upload kode baru. Patch ini
+memfilter berdasarkan data minggu terpilih dan memaksa browser membaca versi baru.
+
+CARA PASANG:
+1. Backup JSON data RPM terlebih dulu (bila sudah punya sales).
+2. Buka repository GitHub yang sedang digunakan oleh Cloudflare Pages RPM.
+3. GANTI 3 FILE DI ROOT REPOSITORY (sejajar firebase-config.js):
+   index.html, app.js, sw.js
+   JANGAN upload ZIP mentah. Jangan buat folder baru.
+4. Commit changes. Pastikan Cloudflare Pages sudah berhasil deploy.
+5. Buka situs RPM Cloudflare (bukan GitHub lama), refresh halaman 2 kali.
+6. Buka menu MASTER PRODUK. Di deskripsi harus ada tulisan FIX WEEK 3.0 AKTIF.
+   Jika tulisan ini tidak ada, aplikasi masih memakai kode lama.
+7. Minggu 2 hanya merek yang memiliki target/PLU minggu 2;
+   Minggu 3 hanya merek yang memiliki target/PLU minggu 3.
+8. Bila data lama memang sudah terlanjur tercatat di dua minggu, gunakan tombol
+   Hapus Minggu Ini pada Master Produk setelah backup JSON. Ini tidak menghapus
+   merek, PLU, QTY atau target minggu lain.
+
+JANGAN TIMPA firebase-config.js. Konfigurasi Firebase Anda tetap.
+JANGAN hapus database Firestore dan jangan hapus data Chrome/PWA.
+DATA TIDAK DIHAPUS SECARA OTOMATIS.
+
+Perubahan lainnya:
+- Buat merek manual bisa memakai merek lama jika ada pada minggu lain.
+- Hapus merek sekarang KHUSUS MINGGU AKTIF, bukan hapus sejarah semua minggu.
+- Service Worker network-first untuk menghindari JS usang dari cache.
+- Data cloud tetap disinkronkan seperti sebelumnya.
